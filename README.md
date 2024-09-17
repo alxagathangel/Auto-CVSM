@@ -58,7 +58,7 @@ For every file **{file_name}.xlsx**, the system exports should be the following:
 
 ## FILES
 
-- To store all the confidential information needed, create a **passkeys.py** file (or use my template with the same name) with the following variables:
+- To store all the confidential information needed, create a **passkeys.py** file with the following variables:
 
 ```python
 input_dir = 'your_input_directory'
