@@ -3,9 +3,14 @@
 The Auto-CVSM System takes company messaging data in .xlsx format and processes them in bulk. After cleaning, visualizing, and storing them in a database, the visuals are sent to the client.
 The process is completely automated.
 
+**FEATURES IN PROGRESS:**
+
+- Storing client email address upon receiving new email. Checking for repeated addresses to avoid duplicates.
+- Automatically saving emailed .xlsx attachments to created input folder (if it doesn't already exist).
+
 ## OVERVIEW
 
-The program is coded entirely in Python 3.11.9, using mainly *pandas, matplotlib, sqlalchemy and smtplib*. See **VERSIONS.txt** for an extended list of library versions. There are two directories of interest; *input* and *output*, where the original excel files and the cleaned excel files & data plots are stored respectively.
+The program uses Python 3.11.9 and the libraries *pandas, matplotlib, sqlalchemy and smtplib*. See **VERSIONS.txt** for an extended list of library versions. There are two directories of interest; *input* and *output*, where the original excel files and the cleaned excel files & data plots are stored respectively.
 
 ### Cleaning
 
@@ -25,16 +30,16 @@ Plots are created to visualize the data. The three plots show the following info
 
 ### Exporting
 
-A directory was created prior to the cleaning process, named after the excel file name.
+A directory is created along the cleaning process, named after the excel file name.
 The clean excel and plots are all exported inside their dedicated folder. These folders are stored in the output directory.
 
 ### Storing
 
-An SQL database is created on MySQL Workbench, once again named after the file name, with the table *'messages'* in each one.
+An SQL database is created on MySQL Workbench, once again named after the file name, with the table *'messages'* in each one. The table for each database consists of the same columns as the excel sheets.
 
 ### Mailing
 
-The visualized data are then sent to the client. The e-mail consists of three attachments that contain the plots, and a message that can be customized in the msg_txt variable. There is an additional mail function with just text that is not used in the system.
+The visualized data are then sent to the client. The e-mail consists of three attachments that contain the plots, and a message that can be customized by editing the msg_txt variable. There is an additional mail function with just text that is not used in the system, but can be used properly if there isn't a need to send visuals. To use it, you must first define the message.
 
 ### Expected Output
 
@@ -58,7 +63,7 @@ For every file **{file_name}.xlsx**, the system exports should be the following:
 
 ## FILES
 
-- To store all the confidential information needed, create a **passkeys.py** file with the following variables:
+- To store all the confidential information needed, create a **passkeys.py** file (or use my template with the same name) with the following variables:
 
 ```python
 input_dir = 'your_input_directory'
@@ -71,8 +76,9 @@ host = 'your_host'
 # sender email info
 email = 'your_email'
 epass = 'your_email_password'
+comp_name = 'Your Company Name'
 
-# receiver email directory
+# receiver email directory with the example inputs provided
 client_emails = {
     'HopOn1':'email@one.com',
     'pigeon':'email@two.com',
@@ -83,12 +89,14 @@ client_emails = {
 
 **Passkeys** is imported as **pk** on all files. Make sure to replace all the values with your own. Client emails is a directory with key as the file name and value as the receiver email for testing purposes. Ways to receive receiver email addresses and the input excel files themselves will vary.
 
-Alternatively, if you don't want to use an imported .py file, you can store the information as environment variables using *python-dotenv*.
+Alternatively, if you don't want to use an imported .py file, you can store the information as environment variables using *python-dotenv*. However, you will need to change all the pk.variable instances in the code to their respective env variables.
 
-- The *input* directory contains sample .xlsx files compatible with the cleaning process. We're assuming all client data is stored using the template they were provided. Some files have been changed in ways that are accounted for.
+- The **input** directory contains sample .xlsx files compatible with the cleaning process. We're assuming all client data is stored using the template they were provided. Some files have been changed in ways that are accounted for.
 
 - The file **connection.py** contains functions to create the database. This is done using *SQLAlchemy*, but there is an additonal function containing a method with mysql connector. Opt for using *create_database_Alchemy()* instead.
 
 - The file **mail.py** has the functions required to send the mails. There are two mailing functions, one for text only, and one for text with image attachments. Change the text content as desired.
 
 - The file **plotting.py** has the three plot functions that are combined in the main plot function in **auto.py**.
+
+- Run the **autoCVSM.py** file to execute the program.
